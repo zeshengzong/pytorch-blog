@@ -35,6 +35,16 @@ Take the raw text from Step 1 and format it as markdown following these strict r
 - Do NOT use `---` horizontal rules as section separators.
 - Ignore the "Learning Resources" section in the footer — it is not part of the blog content.
 - Include the blog title as `# Title`, and include date/author metadata if visible on the page.
+- **At the end of the markdown file**, append an "Original Link" / "原文链接" section with the source URL. English version format:
+  ```
+  ---
+  Original Link: <the blog URL>
+  ```
+  Chinese version format:
+  ```
+  ---
+  原文链接: <the blog URL>
+  ```
 
 ### Step 3: Self-check before saving
 
@@ -44,23 +54,34 @@ Before saving, verify:
 - Have you omitted any paragraphs that exist on the webpage? If so, add them back.
 - Is the content in the same order as the original? If not, reorder it.
 
-### Step 4: Save the English version
+### Step 4: Determine filename
 
-Determine the filename from the URL slug (the last path segment, e.g. `pytorch-2-11-release-blog` from `https://pytorch.org/blog/pytorch-2-11-release-blog/`).
+1. Extract the **publish date** from the blog page (look for date metadata visible on the page, e.g. "May 21, 2025"). Format it as `YYYYMMDD` (e.g. `20250521`).
+2. Determine the **slug** from the URL (the last path segment, e.g. `pytorch-2-11-release-blog` from `https://pytorch.org/blog/pytorch-2-11-release-blog/`).
+3. The filename pattern is: `<date>_<slug>` (e.g. `20250521_pytorch-2-11-release-blog`).
 
-Save the English markdown to `posts/<filename>.md`.
+### Step 5: Save the English version
 
-### Step 5: Translate to Chinese
+Save the English markdown to `posts/<date>_<slug>.md`.
+
+### Step 6: Translate to Chinese
 
 Translate the entire markdown content into Chinese. Rules:
 - Translate sentence by sentence. Do NOT summarize or change any sentence structure while translating.
 - Preserve all markdown formatting, code blocks (only translate comments inside code, not code itself), and all hyperlinks (translate link text but keep URLs unchanged).
 
-Save the Chinese translation to `post-cn/<filename>.md`.
+Save the Chinese translation to `post-cn/<date>_<slug>.md` (this is the **inline link version**, links remain as `[text](url)` in the body).
 
-### Step 6: Extract links from Chinese version
+### Step 7: Create Chinese version with extracted links
 
-Apply the `blog-link-extract` skill to `post-cn/<filename>.md`: extract all inline markdown links from the body, replace them with plain text, and append a "链接汇总" section at the end of the file, each link write as key-value format as following, do not use markdown format link. Link example:
+Copy `post-cn/<date>_<slug>.md` to `post-cn/<date>_<slug>_links.md`.
+
+Apply the `blog-link-extract` skill to the `_links.md` copy: extract all inline markdown links from the body, replace them with plain text, and append a "链接汇总" section at the end of the file, each link written as key-value format as following, do not use markdown format link. Link example:
 - PyTorch Foundation: https://pytorch.org/foundation/
 
-Report the two saved file paths when done.
+### Summary
+
+At the end, report all three saved file paths:
+- English: `posts/<date>_<slug>.md`
+- Chinese (inline links): `post-cn/<date>_<slug>.md`
+- Chinese (extracted links): `post-cn/<date>_<slug>_links.md`
